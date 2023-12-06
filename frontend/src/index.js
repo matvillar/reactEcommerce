@@ -15,12 +15,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Home from './pages/Home';
 import ProductPage from './pages/ProductPage';
+import CartPage from './pages/CartPage';
+import Login from './pages/Login';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index={true} path="/" element={<Home />}></Route>
       <Route path="/product/:id" element={<ProductPage />}></Route>
+      <Route path="/cart" element={<CartPage />}></Route>
+      <Route path="/login" element={<Login />}></Route>
     </Route>
   )
 );

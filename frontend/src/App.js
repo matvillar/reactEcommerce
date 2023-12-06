@@ -11,7 +11,6 @@ const App = () => {
       <main className="py-3">
         {/* Only padding top and bottom */}
         <Container>
-          <h1>Welcome to EcommerceTemplate</h1>
           <Outlet />
         </Container>
       </main>

@@ -51,3 +51,10 @@ table th {
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
 }
+.icon {
+  color: #d4aa7d;
+  transition: all 0.3s ease-in-out;
+}
+.icon:hover {
+  color: #82480b;
+}
