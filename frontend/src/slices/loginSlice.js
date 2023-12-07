@@ -16,10 +16,14 @@ const loginSlice = createSlice({
       state.userInfo = action.payload;
       localStorage.setItem('userInfo', JSON.stringify(action.payload));
     },
+    logout: (state) => {
+      state.userInfo = null;
+      localStorage.removeItem('userInfo');
+    },
   },
 });
 
 // export actions
-export const { setCredentials } = loginSlice.actions;
+export const { setCredentials, logout } = loginSlice.actions;
 // export reducer
 export default loginSlice.reducer;

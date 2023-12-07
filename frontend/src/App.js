@@ -1,5 +1,7 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -9,12 +11,13 @@ const App = () => {
     <>
       <Header />
       <main className="py-3">
-        {/* Only padding top and bottom */}
         <Container>
           <Outlet />
         </Container>
       </main>
       <Footer />
+
+      <ToastContainer />
     </>
   );
 };

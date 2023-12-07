@@ -1,12 +1,30 @@
-import { Navbar, Nav, Container, Badge } from 'react-bootstrap';
+import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLogoutMutation } from '../slices/usersApiSlice';
+import { logout } from '../slices/loginSlice';
 import logo from '../assets/logo.png';
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
-  console.log(cartItems);
+  const { userInfo } = useSelector((state) => state.login);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [logoutCall] = useLogoutMutation();
+
+  const logoutHandler = async () => {
+    try {
+      await logoutCall().unwrap();
+      dispatch(logout()); // clearing local storage
+      navigate('/login');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <header>
       <Navbar bg="light" variant="dark" expand="lg" collapseOnSelect>
@@ -52,15 +70,32 @@ const Header = () => {
                   {/* Show amount of items in the cart with a circle red top right of cart icon */}
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/login">
-                <Nav.Link>
-                  <FaUser
-                    size={28}
-                    style={{ marginRight: '5px' }}
-                    className="icon"
-                  />
-                </Nav.Link>
-              </LinkContainer>
+              {userInfo ? (
+                <NavDropdown
+                  title={
+                    <span style={{ color: '#D4AA7D' }}>{userInfo.name}</span>
+                  }
+                  id="username"
+                >
+                  <LinkContainer to="/profile">
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    Log Out
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to="/login">
+                  <Nav.Link href="/login">
+                    <FaUser
+                      size={28}
+                      style={{ marginRight: '5px' }}
+                      className="icon"
+                    />
+                  </Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
