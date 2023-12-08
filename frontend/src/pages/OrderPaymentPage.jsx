@@ -197,7 +197,7 @@ const OrderPaymentPage = () => {
                   </ListGroup.Item>
                 )}
 
-                {/* {loadingDeliver && <Loader />} */}
+                {isPaying && <SpinnerLoad />}
 
                 {userInfo &&
                   userInfo.isAdmin &&

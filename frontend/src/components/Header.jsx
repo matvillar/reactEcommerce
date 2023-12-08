@@ -66,8 +66,6 @@ const Header = () => {
                       </Badge>
                     </span>
                   )}
-
-                  {/* Show amount of items in the cart with a circle red top right of cart icon */}
                 </Nav.Link>
               </LinkContainer>
               {userInfo ? (
@@ -95,6 +93,24 @@ const Header = () => {
                     />
                   </Nav.Link>
                 </LinkContainer>
+              )}
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown
+                  title={<span style={{ color: '#D4AA7D' }}>Admin</span>}
+                  id="adminmenu"
+                >
+                  <LinkContainer to="/admin/userlist">
+                    <NavDropdown.Item>Users</NavDropdown.Item>
+                  </LinkContainer>
+
+                  <LinkContainer to="/admin/productlist">
+                    <NavDropdown.Item>Products</NavDropdown.Item>
+                  </LinkContainer>
+
+                  <LinkContainer to="/admin/orderlist">
+                    <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
               )}
             </Nav>
           </Navbar.Collapse>

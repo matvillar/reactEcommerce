@@ -1,13 +1,31 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import {
+  Row,
+  Col,
+  Image,
+  ListGroup,
+  Card,
+  Button,
+  Form,
+  FormGroup,
+} from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import Rating from '../components/Rating';
-import { useGetProductDetailsQuery } from '../slices/productsApiSlice';
+import {
+  useGetProductDetailsQuery,
+  useCreateReviewMutation,
+} from '../slices/productsApiSlice';
 import SpinnerLoad from '../components/SpinnerLoad';
 import Message from '../components/Message';
 import { addItemToCart } from '../slices/cartSlice';
+import { toast } from 'react-toastify';
+// import { FaFaceAngry } from 'react-icons/fa6';
+// import { FaFaceFrownOpen } from 'react-icons/fa6';
+// import { FaFaceFlushed } from 'react-icons/fa6';
+// import { FaFaceSmileBeam } from 'react-icons/fa6';
+// import { FaFaceGrinStars } from 'react-icons/fa6';
 
 const ProductPage = () => {
   const { id: productId } = useParams();
@@ -16,16 +34,40 @@ const ProductPage = () => {
   const navigate = useNavigate();
 
   const [quantity, setQuantity] = useState(1); // we set the default quantity to 1
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
 
   const {
     data: product,
     isLoading,
+    refetch,
     error,
   } = useGetProductDetailsQuery(productId);
+
+  const { userInfo } = useSelector((state) => state.login);
+
+  const [createReview, { isLoading: isReviewLoading }] =
+    useCreateReviewMutation();
 
   const addItemToCartHandler = () => {
     dispatch(addItemToCart({ ...product, quantity }));
     navigate('/cart');
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      await createReview({
+        productId,
+        rating,
+        comment,
+      }).unwrap();
+      refetch();
+      toast.success('Review added');
+      setRating(0);
+    } catch (error) {
+      toast.error(error?.data?.message || error.error);
+    }
   };
   return (
     <>
@@ -134,6 +176,70 @@ const ProductPage = () => {
                   </ListGroup.Item>
                 </ListGroup>
               </Card>
+            </Col>
+          </Row>
+
+          <Row className="review">
+            <Col md={6}>
+              <h2>Reviews</h2>
+              {product.reviews.length === 0 && <Message>No Reviews</Message>}
+              <ListGroup variant="flush">
+                {product.reviews.map((review) => (
+                  <ListGroup.Item key={review._id}>
+                    <strong>{review.name}</strong>
+                    <Rating value={review.rating}></Rating>
+                    <p>{review.createdAt.substring(0, 10)}</p>
+                    <p>{review.comment}</p>
+                  </ListGroup.Item>
+                ))}
+                <ListGroup.Item>
+                  <h2>Write a Review</h2>
+                  {isReviewLoading && <SpinnerLoad />}
+
+                  {userInfo ? (
+                    <Form onSubmit={submitHandler}>
+                      <Form.Group controlId="rating">
+                        <Form.Label>Rating</Form.Label>
+                        <Form.Control
+                          as="select"
+                          value={rating}
+                          onChange={(e) => setRating(e.target.value)}
+                        >
+                          <option value="">Select...</option>
+                          <option value="1">1 - Poor</option>
+                          <option value="2">2 - Fair</option>
+                          <option value="3">3 - Good</option>
+                          <option value="4">4 - Very Good</option>
+                          <option value="5">5 - Excellent</option>
+                        </Form.Control>
+                      </Form.Group>
+                      <FormGroup controlId="comment" className="my-2">
+                        <Form.Label>Comment</Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          row="3"
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                        ></Form.Control>
+                      </FormGroup>
+                      <Button
+                        type="submit"
+                        disabled={isReviewLoading}
+                        variant="primary"
+                      >
+                        Submit
+                      </Button>
+                    </Form>
+                  ) : (
+                    <>
+                      <Message>
+                        Please <Link to="/login">sign in</Link> to write a
+                        review{' '}
+                      </Message>
+                    </>
+                  )}
+                </ListGroup.Item>
+              </ListGroup>
             </Col>
           </Row>
         </>
