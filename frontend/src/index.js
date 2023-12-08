@@ -22,6 +22,10 @@ import Register from './pages/Register';
 import ShippingPage from './pages/ShippingPage';
 import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
+import OrderPaymentPage from './pages/OrderPaymentPage';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import Profile from './pages/Profile';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -35,6 +39,8 @@ const router = createBrowserRouter(
         <Route path="/shipping" element={<ShippingPage />}></Route>
         <Route path="/payment" element={<PaymentPage />}></Route>
         <Route path="/placeorder" element={<PlaceOrderPage />}></Route>
+        <Route path="/order/:id" element={<OrderPaymentPage />}></Route>
+        <Route path="/profile" element={<Profile />}></Route>
       </Route>
     </Route>
   )
@@ -43,7 +49,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <PayPalScriptProvider deferLoading={true}>
+        <RouterProvider router={router} />
+      </PayPalScriptProvider>
     </Provider>
   </React.StrictMode>
 );

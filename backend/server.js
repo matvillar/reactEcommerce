@@ -6,6 +6,7 @@ import connectDB from './config/database.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 import prodRoutes from './routes/product-routes.js';
 import userRoutes from './routes/user-routes.js';
+import orderRoutes from './routes/order-routes.js';
 connectDB(); // connect to database(mongodb)
 
 const port = process.env.PORT || 6000;
@@ -26,6 +27,13 @@ app.get('/', (req, res) => {
 app.use('/api/products', prodRoutes);
 // user routes
 app.use('/api/users', userRoutes);
+// order routes
+app.use('/api/orders', orderRoutes);
+
+// paypal client id route
+app.get('/api/config/paypal', (req, res) =>
+  res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
+);
 
 app.use(notFound); // not found middleware
 app.use(errorHandler); // error handler middleware
