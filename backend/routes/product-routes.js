@@ -4,11 +4,13 @@ import {
   getProducts,
   getProductById,
   createReview,
+  getTop3Products,
 } from '../controllers/product-controller.js';
 import { protectRoutes } from '../middleware/authMiddleware.js';
 
 // get all products
 router.get('/', getProducts);
+router.get('/top3', getTop3Products);
 
 // get product by id
 router.get('/:id', getProductById);

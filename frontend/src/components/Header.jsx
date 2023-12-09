@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/loginSlice';
 import logo from '../assets/logo.png';
+import Search from './Search';
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
@@ -27,7 +28,13 @@ const Header = () => {
   };
   return (
     <header>
-      <Navbar bg="light" variant="dark" expand="lg" collapseOnSelect>
+      <Navbar
+        className="navbar"
+        style={{ background: '#fff' }}
+        variant="dark"
+        expand="lg"
+        collapseOnSelect
+      >
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>
@@ -41,11 +48,11 @@ const Header = () => {
           </LinkContainer>
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
-            style={{ backgroundColor: '#D4AA7D' }}
+            style={{ backgroundColor: '#306068' }}
           />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              {' '}
+              <Search />
               {/*ms-auto aligns items to the right  */}
               <LinkContainer to="/cart">
                 <Nav.Link className="position-relative">
@@ -71,7 +78,9 @@ const Header = () => {
               {userInfo ? (
                 <NavDropdown
                   title={
-                    <span style={{ color: '#D4AA7D' }}>{userInfo.name}</span>
+                    <span style={{ color: '#306068' }}>
+                      Hi, {userInfo.name}
+                    </span>
                   }
                   id="username"
                 >

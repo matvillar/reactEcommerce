@@ -21,6 +21,8 @@ import SpinnerLoad from '../components/SpinnerLoad';
 import Message from '../components/Message';
 import { addItemToCart } from '../slices/cartSlice';
 import { toast } from 'react-toastify';
+import { FaLongArrowAltLeft } from 'react-icons/fa';
+
 // import { FaFaceAngry } from 'react-icons/fa6';
 // import { FaFaceFrownOpen } from 'react-icons/fa6';
 // import { FaFaceFlushed } from 'react-icons/fa6';
@@ -71,8 +73,8 @@ const ProductPage = () => {
   };
   return (
     <>
-      <Link className="btn btn-light my-3" to="/">
-        Go Back
+      <Link className="btn btn-primary my-3" to="/">
+        <FaLongArrowAltLeft />
       </Link>
       {isLoading ? (
         <SpinnerLoad />

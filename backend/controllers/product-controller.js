@@ -2,11 +2,15 @@ import asyncHandler from '../middleware/asyncHandler.js';
 import Product from '../models/productModel.js';
 
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 4; // number of products per page
+  const pageSize = 8; // number of products per page
   const page = Number(req.query.pageNumber) || 1; // get page number from query string or default to 1
-  const count = await Product.countDocuments(); // count total number of products
 
-  const products = await Product.find({})
+  const keyword = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: 'i' } }
+    : {}; // if keyword exists, find products with name that matches keyword
+
+  const count = await Product.countDocuments({ ...keyword }); // count total number of products
+  const products = await Product.find({ ...keyword })
     .limit(pageSize)
     .skip(pageSize * (page - 1)); // find all products
 
@@ -22,6 +26,14 @@ const getProductById = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Product not found');
   }
+});
+
+// Get Top3 Rated Products
+
+const getTop3Products = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3); // find all products and sort by rating
+
+  res.status(200).json(products);
 });
 
 // Create a new review
@@ -73,4 +85,4 @@ const createReview = asyncHandler(async (req, res) => {
   }
 });
 
-export { getProducts, getProductById, createReview };
+export { getProducts, getProductById, createReview, getTop3Products };
